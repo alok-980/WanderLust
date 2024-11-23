@@ -24,9 +24,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.engine('ejs', ejsMate);
 
-app.get("/", (req, res) => {
-    res.send("root");
-})
+// app.get("/", (req, res) => {
+//     res.send("root");
+// })
 
 app.get("/listing", async (req, res) => {
     let allListing = await Listing.find();
