@@ -1,0 +1,28 @@
+body {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-optical-sizing: auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    flex: 1;
+}
+
+.card-img-top {
+    border-radius: 1rem;
+    width: 100% !important;
+    object-fit: cover !important;
+    margin-bottom: 0.2rem;
+}
+
+.btn {
+    background-color: #ff2f56;
+    border: 1px solid #ff2f56;
+}
+
+.btn:hover {
+    background-color: #ff0e3a;
+    border: 1px solid #ff0e3a;
+}

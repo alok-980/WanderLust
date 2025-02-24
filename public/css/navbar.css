@@ -1,0 +1,18 @@
+.navbar {
+    padding: 1rem;
+    background-color: white;
+}
+
+.fa-compass {
+    font-size: 2rem;
+    color: #ff2f56;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    color: #ff2f56;
+}
+
+.nav-link {
+    color: #222222 !important;
+}

@@ -1,0 +1,132 @@
+.show-img {
+    height: 35vh;
+}
+
+.btn-grp {
+    display: flex;
+}
+
+.btn {
+    margin-right: 1rem;
+}
+
+.list-group-item {
+    border: 1px solid #ff2f56;
+    border-radius: 10px !important;
+}
+
+/* Styling for the review form */
+.review {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+/* Style for the comment textarea */
+.review .form-control {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    /* padding: 10px; */
+    font-size: 1rem;
+}
+
+
+.reviews-container {
+    display: flex;
+    flex-wrap: wrap;   /* Allow the items to wrap into multiple rows */
+    gap: 20px;         /* Space between the review cards */
+    padding: 20px;
+}
+
+.review-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    flex: 1 1 calc(50% - 20px);  /* Each card takes 50% of the container width minus the gap */
+    max-width: calc(50% - 20px); /* Limit max width to 50% of the container */
+    margin-bottom: 20px;  /* Space between rows */
+}
+
+.review-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.review-content {
+    padding: 20px;
+}
+
+.review-header {
+    margin-bottom: 15px;
+}
+
+.review-details {
+    font-size: 14px;
+    color: #555;
+}
+
+.review-comment-wrapper {
+    max-height: 100px;
+    overflow: hidden;
+}
+
+.review-comment {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+}
+
+.see-more-btn {
+    background: transparent;
+    border: none;
+    color: #007bff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.see-more-btn:hover {
+    color: #0056b3;
+}
+
+.review-rating {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #888;
+}
+
+.delete-btn-container {
+    text-align: right;
+    margin-top: 15px;
+}
+
+.delete-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+    background-color: #d32f2f;
+}
+
+.fa-trash-arrow-up {
+    margin-right: 5px;
+}
+
+/* Responsiveness for smaller screens */
+@media (max-width: 768px) {
+    .review-card {
+        flex: 1 1 100%; /* On smaller screens, each card will take up 100% width */
+        max-width: 100%;
+    }
+}

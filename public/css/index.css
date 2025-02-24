@@ -1,0 +1,28 @@
+.card {
+    border: none;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.listing-link {
+    text-decoration: none;
+}
+
+.card-body {
+    padding: 0;
+}
+
+.btn {
+    margin-bottom: 3rem;
+}
+
+.card-img-overlay {
+    opacity: 0;
+}
+
+.card-img-overlay:hover {
+    opacity: 0.2;
+    background-color: white;
+}
+

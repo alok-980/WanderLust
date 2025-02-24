@@ -1,23 +1,79 @@
 <% layout('layouts/boilerplate') %>
-<body>
-    <h1>Edit Listing</h1>
-    <form method="POST" action="/listing/<%= listing._id %>?_method=PUT">
-        <input type="text" placeholder="enter title" name="title">
-        <br><br>
-        <input type="text" placeholder="enter description" name="description">
-        <br><br>
-        <input type="text" placeholder="enter image" name="filename">
-        <br><br>
-        <input type="text" placeholder="enter price" name="price">
-        <br><br>
-        <input type="text" placeholder="enter location" name="location">
-        <br><br>
-        <input type="text" placeholder="enter country" name="country">
-        <br><br>
-        <button>Save</button>
-    </form>
-    <br>
-    <a href="/listing/<%= listing._id %>">
-        <button class="btn btn-primary">Cancle</button>
-    </a>
-</body>
+
+    <body>
+        <div class="row mt-4 mb-5">
+            <div class="col-md-8 offset-md-2 col-10 offset-1">
+                <h1>Edit Listing</h1>
+                <form method="POST" action="/listing/<%= listing._id %>?_method=PUT" novalidate
+                    class="needs-validation">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" placeholder="enter title" name="title"
+                            value="<%= listing.title %>" required>
+                        <div class="invalid-feedback">
+                            Please enter a catchy title.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" rows="3" name="description"
+                            placeholder="enter description" required><%= listing.description %></textarea>
+                        <div class="invalid-feedback">
+                            Please enter your description.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="url" class="form-label">Image URL link</label>
+                        <input type="text" class="form-control" placeholder="enter image" name="url"
+                            value="<%= listing.image.url %>">
+                        <div class="invalid-feedback">
+                            Please enter your img url(optional).
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="mb-3 col-md-4">
+                            <label for="price" class="form-label">Price</label>
+                            <input type="text" class="form-control" placeholder="enter price" name="price"
+                                value="<%= listing.price %>" required>
+                            <div class="invalid-feedback">
+                                Please enter your price.
+                            </div>
+                        </div>
+
+                        <div class="mb-4 col-md-8">
+                            <label for="country" class="form-label">Country</label>
+                            <input type="text" class="form-control" placeholder="enter country" name="country"
+                                value="<%= listing.country %>" required>
+                            <div class="invalid-feedback">
+                                Please enter a country.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" class="form-control" placeholder="enter location" name="location"
+                            value="<%= listing.location %>" required>
+                        <div class="invalid-feedback">
+                            Please enter your location.
+                        </div>
+                    </div>
+
+                    <button class="btn btn-danger">
+                        <i class="fa-regular fa-bookmark"></i>
+                        Save
+                    </button>
+
+                    <a href="/listing/<%= listing._id %>">
+                        <button class="btn btn-danger">
+                            <i class="fa-solid fa-xmark"></i>
+                            Cancle
+                        </button>
+                    </a>
+                </form>
+            </div>
+        </div>
+    </body>

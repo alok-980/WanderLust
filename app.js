@@ -1,12 +1,19 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const Listing = require("./models/listing.js");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
+const session = require("express-session");
+const flash = require("connect-flash");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const User = require("./models/user.js");
+
+const listingRouter = require("./routes/listing.js");
+const reviewRouter = require("./routes/review.js");
+const userRouter = require("./routes/user.js");
 
 main().then(() => {
     console.log("connection successfull");
@@ -26,85 +33,40 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.engine('ejs', ejsMate);
 
+const sessionOption = {
+    secret: "mysupersecretcode",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        expires: Date.now() + 7 * 27 * 60 * 60 * 1000,
+        maxAge:  7 * 27 * 60 * 60 * 1000,
+        httpOnly: true
+    }
+};
+
 app.get("/", (req, res) => {
     res.render("../views/listings/root.ejs");
 })
 
-app.get("/listing", wrapAsync( async (req, res) => {
-    let allListing = await Listing.find();
-    res.render("../views/listings/index.ejs", { allListing });
-}))
+app.use(session(sessionOption));
+app.use(flash());
 
-app.get("/listing/new", (req, res) => {
-    res.render("../views/listings/new.ejs");
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use((req, res, next) => {
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    next();
 })
 
-app.get("/listing/:id", wrapAsync( async (req, res) => {
-    const { id } = req.params;
-    let listing = await Listing.findById(id);
-    console.log(listing);
-    res.render("../views/listings/show.ejs", { listing });
-}))
-
-app.post("/listing", wrapAsync( async (req, res) => {
-
-    if(!req.body) {
-        throw new ExpressError(400, "Send valid data for listing")
-    }
-
-    let { title, description, url, price, location, country } = req.body;
-    const newListing = new Listing({
-        title: title,
-        description: description,
-        image: {
-            url: url
-        },
-        price: price,
-        location: location,
-        country: country
-    })
-
-    await newListing.save();
-    res.redirect("/listing");
-}))
-
-app.get("/listing/:id/edit", wrapAsync( async (req, res) => {
-    const { id } = req.params;
-    let listing = await Listing.findById(id);
-    res.render("../views/listings/edit.ejs", { listing });
-}))
-
-app.put("/listing/:id", wrapAsync( async (req, res) => {
-
-    if(!req.body) {
-        throw new ExpressError(400, "Send valid data for listing")
-    }
-
-    const { id } = req.params;
-    const { title, description, url, price, location, country } = req.body;
-    const updateListing = await Listing.findByIdAndUpdate(id,
-        {
-            title: title,
-            description: description,
-            image: {
-                url: url
-            },
-            price: price,
-            location: location,
-            country: country
-        },
-        { runValidators: true, new: true }
-    )
-
-    res.redirect(`/listing/${id}`);
-}))
-
-app.delete("/listing/:id", wrapAsync( async (req, res) => {
-    const { id } = req.params;
-    let deleteListing = await Listing.findByIdAndDelete(id);
-    console.log(deleteListing);
-    res.redirect("/listing");
-}))
+app.use("/listing", listingRouter);
+app.use("/listing/:id/review", reviewRouter);
+app.use("/", userRouter);
 
 app.all("*", (req, res, next) => {
     next(new ExpressError(404, "page not found!"));

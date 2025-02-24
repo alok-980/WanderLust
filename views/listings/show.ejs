@@ -1,23 +1,120 @@
 <% layout('layouts/boilerplate') %>
-<body>
-    <h1>See in Deatile</h1>
-    <ul>
-        <li><%= listing.title %></li>
-        <li><%= listing.description %></li>
-        <li><%= listing.image.filename %></li>
-        <li>&#8377;<%= listing.price.toLocaleString("en-IN") %></li>
-        <li><%= listing.location %></li>
-        <li><%= listing.country %></li>
-    </ul>
-    <a href="/listing/<%= listing._id %>/edit">
-        <button class="btn btn-primary">Edit</button>
-    </a>
-    <br><br>
-    <form method="POST" action="/listing/<%= listing._id %>?_method=DELETE">
-        <button class="btn btn-primary">Delete</button>
-    </form>
-    <br>
-    <a href="/listing">
-        <button class="btn btn-primary">See All Listings</button>
-    </a>
-</body>
+
+    <link rel="stylesheet" href="/css/show.css">
+
+    <body>
+        <div class="row mt-4 mb-5">
+            <div class="col-md-8 offset-md-2 col-10 offset-1">
+                <h1 class="mb-3">
+                    <%= listing.title %>
+                </h1>
+                <img src="<%= listing.image.url %>" class="card-img-top show-img mb-2" alt="listing-image">
+                <div class="card-body">
+                    <p class="card-text">
+                        <%= listing.description %>
+                    </p>
+                    <b>&#8377;<%= listing.price.toLocaleString("en-IN") %></b>
+                    <p>
+                        <%= listing.location %>
+                            <br>
+                            <%= listing.country %>
+                    </p>
+                    <div class="btn-grp mb-3">
+                        <a href="/listing/<%= listing._id %>/edit">
+                            <button class="btn btn-danger mb-2" style="width: 5rem;"><i
+                                    class="fa-regular fa-pen-to-square"></i>&nbsp;&nbsp;Edit</button>
+                        </a>
+                        <form method="POST" action="/listing/<%= listing._id %>?_method=DELETE">
+                            <button class="btn btn-danger" style="width: 6.5rem;"><i <i
+                                    class="fa-solid fa-trash-arrow-up"></i>&nbsp;Delete</button>
+                        </form>
+                    </div>
+                </div>
+
+                <a href="/listing">
+                    <button class="btn btn-danger back" style="width: 12.5rem;"><i
+                            class="fa-regular fa-circle-left back-i"></i>&nbsp;Back</button>
+                </a>
+
+                <!-- review section -->
+            </div>
+        </div>
+
+        <div class="row mt-4 mb-5">
+            <div class="col-md-8 offset-md-2 col-10 offset-1">
+                <div class="review">
+                    <form action="/listing/<%= listing._id %>/review" method="POST" novalidate class="needs-validation">
+                        <!-- Rating -->
+                        <div class="mb-4">
+                            <label for="rating" class="form-label">Rating:</label>
+                            <input type="range" class="form-range" min="1" max="5" id="rating" name="review[rating]">
+                        </div>
+
+                        <!-- Comment -->
+                        <div class="mb-4">
+                            <label for="comment" class="form-label">Comment</label>
+                            <textarea name="review[comment]" id="comment" cols="30" rows="5" class="form-control"
+                                required></textarea>
+                            <div class="invalid-feedback">
+                                Please add a comment for your review.
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fa-solid fa-circle-plus"></i>
+                            Add Review
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Reviews Container -->
+                <div class="reviews-container">
+                    <% for (let review of listing.review) { %>
+                        <div class="review-card">
+                            <!-- Review Card Content -->
+                            <div class="review-content">
+                                <!-- Review Details -->
+                                <div class="review-details">
+                                    <div class="review-header">
+                                        <strong>Comment:</strong>
+                                        <div class="review-comment-wrapper"
+                                            id="review-comment-wrapper-<%= review._id %>">
+                                            <p class="review-comment" id="review-comment-<%= review._id %>">
+                                                <%= review.comment %>
+                                            </p>
+                                        </div>
+                                        <% if (review.comment.length> 150) { %>
+                                            <div class="see-more" id="see-more-<%= review._id %>">
+                                                <button class="see-more-btn"
+                                                    onclick="toggleReview('<%= review._id %>')">See More</button>
+                                            </div>
+                                            <% } %>
+                                    </div>
+
+                                    <!-- Review Rating -->
+                                    <div class="review-rating">
+                                        <strong>Rating:</strong>
+                                        <p>
+                                            <%= review.rating %> Star(s)
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- Delete Button -->
+                                <div class="delete-btn-container">
+                                    <form method="POST"
+                                        action="/listing/<%= listing._id %>/review/<%= review._id %>?_method=DELETE"
+                                        class="d-inline">
+                                        <button type="submit" class="delete-btn" title="Delete Review">
+                                            <i class="fa-solid fa-trash-arrow-up"></i> Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
+                </div>
+            </div>
+        </div>
+    </body>
