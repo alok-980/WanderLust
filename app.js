@@ -45,7 +45,7 @@ const sessionOption = {
 };
 
 app.get("/", (req, res) => {
-    res.render("../views/listings/root.ejs");
+    res.render('../views/listings/root.ejs');
 })
 
 app.use(session(sessionOption));

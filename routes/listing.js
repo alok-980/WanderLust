@@ -1,108 +1,41 @@
 const express = require("express");
 const router = express.Router();
-const Listing = require("../models/listing.js");
 const wrapAsync = require("../utils/wrapAsync.js");
-const ExpressError = require("../utils/ExpressError.js");
-const { listingSchema } = require("../schema.js");
-const {isLoggedIn} = require("../middleware.js");
+const { isLoggedIn, isOwner, validateListing } = require("../middleware.js");
+const listingController = require("../Controllers/listings.js");
 
-const validateListing = (req, res, next) => {
-    const {error} = listingSchema.validate(req.body);
-    
-    if(error) {
-        let errMsg = error.details.map((el) => el.message).join(",");
-        throw new ExpressError(400, errMsg);
-    } else {
-        next();
-    }
-}
-
-// Index Route
-router.get("/", wrapAsync( async (req, res) => {
-    let allListing = await Listing.find();
-    res.render("../views/listings/index.ejs", { allListing });
-}))
+router
+    .route("/")
+    .get(wrapAsync(listingController.index)) // index route
+    .post(                                   // create route
+        isLoggedIn,
+        validateListing,
+        wrapAsync(listingController.createListing)
+    );
 
 // New Route
-router.get("/new", isLoggedIn, (req, res) => {
-    res.render("../views/listings/new.ejs");
-})
+router.get("/new", isLoggedIn, listingController.renderNewForm)
 
-// Show Route
-router.get("/:id", wrapAsync( async (req, res) => {
-    const { id } = req.params;
-    let listing = await Listing.findById(id).populate("review");
-    if(!listing) {
-        req.flash("error", "Listing you requested for does not exist!");
-        res.redirect("/listing");
-    }
-    res.render("../views/listings/show.ejs", { listing });
-}))
-
-router.post("/",
-    isLoggedIn,
-    validateListing,
-    wrapAsync( async (req, res) => {
-
-    let { title, description, url, price, location, country } = req.body;
-    const newListing = new Listing({
-        title: title,
-        description: description,
-        image: {
-            url: url
-        },
-        price: price,
-        location: location,
-        country: country
-    })
-
-    await newListing.save();
-    req.flash("success", "New Listing Created!");
-    res.redirect("/listing");
-}))
-
-router.get("/:id/edit", isLoggedIn, wrapAsync( async (req, res) => {
-    const { id } = req.params;
-    let listing = await Listing.findById(id);
-    if(!listing) {
-        req.flash("error", "Listing you requested for does not exist!");
-        res.redirect("/listing");
-    }
-    res.render("../views/listings/edit.ejs", { listing });
-}))
-
-router.put("/:id",
-    isLoggedIn,
-    validateListing,
-    wrapAsync( async (req, res) => {
-
-    const { id } = req.params;
-    const { title, description, url, price, location, country } = req.body;
-    const updateListing = await Listing.findByIdAndUpdate(id,
-        {
-            title: title,
-            description: description,
-            image: {
-                url: url
-            },
-            price: price,
-            location: location,
-            country: country
-        },
-        { runValidators: true, new: true }
+router
+    .route("/:id")
+    .get(wrapAsync(listingController.showListingDetails)) // Show Route
+    .put(                                                 // update
+        isLoggedIn,
+        isOwner,
+        validateListing,
+        wrapAsync(listingController.updateListing)
     )
+    .delete(                                               //delete
+        isLoggedIn,
+        isOwner,
+        wrapAsync(listingController.destroyListing)
+    );
 
-    req.flash("success", "Changes Saved Succesfully");
-
-    res.redirect(`/listing/${id}`);
-}))
-
-router.delete("/:id", isLoggedIn, wrapAsync( async (req, res) => {
-    const { id } = req.params;
-    let deleteListing = await Listing.findByIdAndDelete(id);
-    req.flash("success", "Listing Deleted!");
-    console.log(deleteListing);
-    res.redirect("/listing");
-}))
+//edit
+router.get("/:id/edit",
+    isLoggedIn,
+    isOwner,
+    wrapAsync(listingController.showEditForm)
+)
 
 module.exports = router;
