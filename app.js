@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV != "production") {
+    require('dotenv').config();
+}
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -22,7 +26,7 @@ main().then(() => {
 })
 
 async function main() {
-    await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
+    await mongoose.connect(`${process.env.mongoURI}/wanderlust`);
 }
 
 app.use(express.urlencoded({ extended: true }));
@@ -79,6 +83,6 @@ app.use((err, req, res, next) => {
     // res.status(statusCode).send(message);
 })
 
-app.listen(8080, () => {
+app.listen( process.env.PORT || 8000, () => {
     console.log("server is listening on port 8080");
 })
