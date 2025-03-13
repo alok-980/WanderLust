@@ -48,9 +48,9 @@ const sessionOption = {
     }
 };
 
-app.get("/", (req, res) => {
-    res.render('../views/listings/root.ejs');
-})
+// app.get("/", (req, res) => {
+//     res.render('../views/listings/root.ejs');
+// })
 
 app.use(session(sessionOption));
 app.use(flash());
