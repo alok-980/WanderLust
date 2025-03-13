@@ -26,3 +26,9 @@ body {
     background-color: #ff0e3a;
     border: 1px solid #ff0e3a;
 }
+
+#map { 
+    height: 300px;
+    width: 100%;
+    border-radius: 5px;
+}

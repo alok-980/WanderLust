@@ -1,6 +1,10 @@
 <% layout('layouts/boilerplate') %>
 
     <link rel="stylesheet" href="/css/show.css">
+    <script>
+        const mapToken = "<%= process.env.MAP_TOKEN %>";
+        const coordinates = "<%- JSON.stringify(listing.geometry.coordinates) %>"; // Make sure it's an array like [lng, lat]
+    </script>       
 
     <body>
         <div class="row mt-4 mb-5">
@@ -49,7 +53,7 @@
             </div>
         </div>
 
-        <div class="row mt-4 mb-5">
+        <div class="row mt-4">
             <div class="col-md-8 offset-md-2 col-10 offset-1">
                 <% if(currUser) { %>
                     <div class="review">
@@ -58,8 +62,8 @@
 
                             <label for="rating" class="form-label">Rating:</label>
                             <fieldset class="starability-slot">
-                                <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked
-                                    aria-label="No rating." />
+                                <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1"
+                                    checked aria-label="No rating." />
                                 <input type="radio" id="first-rate1" name="review[rating]" value="1" />
                                 <label for="first-rate1" title="Terrible">1 star</label>
                                 <input type="radio" id="first-rate2" name="review[rating]" value="2" />
@@ -109,7 +113,8 @@
                                                 <div class="review-rating mb-3">
                                                     <strong>Rating:</strong>
 
-                                                    <p class="starability-result card-text" data-rating="<%= review.rating %>">
+                                                    <p class="starability-result card-text"
+                                                        data-rating="<%= review.rating %>">
                                                         Rated: 3 stars
                                                     </p>
                                                 </div>
@@ -147,4 +152,15 @@
                         </div>
             </div>
         </div>
+
+        <!-- mapbox location -->
+        <div class="row mb-5">
+            <div class="col-md-8 offset-md-2 col-10 offset-1">
+                <h3>Where you'll be</h3>
+                <div id="map"></div>
+                
+            </div>
+        </div>
+
+        <script src="/js/map.js"></script>
     </body>
